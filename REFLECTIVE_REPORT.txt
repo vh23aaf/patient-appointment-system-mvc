@@ -1,0 +1,90 @@
+================================================================================
+REFLECTIVE REPORT
+Healthcare Management System Implementation
+
+Student: Vishal Hirani
+Module: Software Architecture - Part 2
+
+================================================================================
+
+INTRODUCTION
+
+This report discusses how the Part 1 design artifacts have been realized in the
+implemented Healthcare Management System, focusing on the application of the
+Model-View-Controller (MVC) architectural pattern and design patterns employed.
+
+IMPLEMENTATION OF PART 1 DESIGNS
+
+The class diagram from Part 1 served as the foundation for all domain entities.
+The abstract UserEntity class forms the base for PatientEntity, mirroring the
+inheritance structure specified in the design. Although the full clinician
+hierarchy (GP, Specialist, Nurse) was designed in Part 1, the implementation
+focuses on core patient management functionality, with the architecture
+supporting future clinician class extensions.
+
+The entity relationships defined in Part 1 have been preserved. PatientEntity
+maintains aggregation relationships with AppointmentEntity and MedicalRecordEntity
+through LinkedList collections, enabling patients to access their appointment
+history and clinical records. The association between PrescriptionEntity and
+PatientEntity, as well as ReferralEntity connections between clinicians, are
+implemented through ID-based relationships stored in the respective entities.
+
+Use cases from Part 1 directly influenced method implementations. The "book
+appointment" use case translates to scheduleAppt() in PatientEntity, while
+"create prescription" manifests in the addRx() service method. The referral
+workflow, central to Part 1's design, drives the ReferralService singleton
+implementation.
+
+MVC ARCHITECTURAL PATTERN APPLICATION
+
+The system strictly adheres to MVC principles through clear separation of
+concerns across three distinct layers.
+
+The MODEL layer encompasses all domain entities in the domain package. These
+classes (UserEntity, PatientEntity, AppointmentEntity, PrescriptionEntity,
+ReferralEntity, MedicalRecordEntity) contain business data and validation logic.
+Entities use LinkedList collections for managing relationships, providing
+efficient insertion and iteration. Each entity includes formatAsCSV() methods
+for data persistence, keeping serialization logic within the model.
+
+The VIEW layer consists of UI components in the ui package. AppWindow provides
+the main interface with tabbed navigation for different entity types. Dialog
+classes (PtDialog, ApptDialog, RxDialog, RefDialog) handle user input for CRUD
+operations. The view layer contains no business logic, purely rendering data and
+capturing user actions. All data manipulation requests are delegated to the
+service layer, maintaining proper MVC boundaries.
+
+The CONTROLLER layer bridges model and view through the service package.
+DataService acts as the primary controller, coordinating data operations and
+managing entity collections. It utilizes FileHandler for persistence operations,
+abstracting file I/O from business logic. ReferralService implements the
+singleton pattern for centralized referral management. Controllers handle all
+data flow between view interactions and model updates.
+
+DESIGN PATTERNS EMPLOYED
+
+The Singleton pattern implementation for ReferralService uses lazy initialization
+with synchronized access. This ensures thread-safe instantiation while delaying
+object creation until first use. The pattern guarantees centralized referral
+management, critical for maintaining referral workflow consistency and audit
+trails.
+
+FileHandler employs Scanner and PrintWriter for I/O operations, differing from
+traditional BufferedReader/Writer approaches. This demonstrates alternative
+implementation strategies while achieving the same functional requirements.
+
+The repository pattern is implicit in DataService, which manages entity
+collections and coordinates persistence through FileHandler. This abstraction
+separates data access logic from business logic.
+
+CONCLUSION
+
+The implementation successfully translates Part 1 designs into a functional
+system. MVC architecture provides maintainable code organization. The lazy
+singleton pattern ensures efficient referral management. The feature-based
+package organization facilitates future enhancements while maintaining clear
+architectural boundaries.
+
+================================================================================
+END OF REPORT
+================================================================================
